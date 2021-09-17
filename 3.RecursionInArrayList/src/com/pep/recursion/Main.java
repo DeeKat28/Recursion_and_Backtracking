@@ -20,10 +20,25 @@ public class Main {
 //        System.out.println(kpc);
 
         // getStairPaths
+//        Scanner sc = new Scanner(System.in);
+//        int n = sc.nextInt();
+//        ArrayList<String> paths = getStairPaths(n);
+//        System.out.println(paths);
+
+        // getMazePaths
+//        Scanner sc = new Scanner(System.in);
+//        int n = sc.nextInt();
+//        int m = sc.nextInt();
+//        ArrayList<String> mazePaths = getMazePaths(0, 0, n-1, m-1);
+//        System.out.println(mazePaths);
+
+        // getMazePathsWithJumps
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        ArrayList<String> paths = getStairPaths(n);
-        System.out.println(paths);
+        int m = sc.nextInt();
+        ArrayList<String> mazePaths = getMazePathsWithJumps(0, 0, n-1, m-1);
+        System.out.println(mazePaths);
+
     }
 
     public static ArrayList<String> gss(String str) {
@@ -99,6 +114,61 @@ public class Main {
         }
         for (String s3: al3) {
             paths.add(3 + s3);
+        }
+
+        return paths;
+    }
+
+    public static ArrayList<String> getMazePaths(int sr, int sc, int dr, int dc) {
+        if (sc == dc && sr == dr) {
+            ArrayList<String> path = new ArrayList<String>();
+            path.add("");
+            return path;
+        } else if (sc > dc || sr > dr) {
+            return new ArrayList<String>();
+        }
+
+        ArrayList<String> paths = new ArrayList<String>();
+
+        ArrayList<String> hMoves = getMazePaths(sr, sc + 1, dr, dc);
+        for (String path : hMoves) {
+            paths.add("h" + path);
+        }
+        ArrayList<String> vMoves = getMazePaths(sr + 1, sc, dr, dc);
+        for (String path : vMoves) {
+            paths.add("v" + path);
+        }
+
+        return paths;
+    }
+
+    public static ArrayList<String> getMazePathsWithJumps(int sr, int sc, int dr, int dc) {
+
+        if (sc == dc && sr == dr) {
+            ArrayList<String> path = new ArrayList<String>();
+            path.add("");
+            return path;
+        } else if (sc > dc || sr > dr) {
+            return new ArrayList<String>();
+        }
+
+        ArrayList<String> paths = new ArrayList<String>();
+
+        int  step = 1;
+        int limit = Math.max(dc, dr);
+        while (step <= limit) {
+            ArrayList<String> hMoves = getMazePathsWithJumps(sr, sc + step, dr, dc);
+            ArrayList<String> vMoves = getMazePathsWithJumps(sr + step, sc, dr, dc);
+            ArrayList<String> dMoves = getMazePathsWithJumps(sr + step, sc + step, dr, dc);
+
+            for (String s: hMoves)
+                paths.add("h" + step + s);
+            for (String s: vMoves)
+                paths.add("v" + step  + s);
+            for (String s: dMoves)
+                paths.add("d" + step  + s);
+
+            step++;
         }
 
         return paths;
